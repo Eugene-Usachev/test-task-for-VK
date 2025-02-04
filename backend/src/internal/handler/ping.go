@@ -9,7 +9,7 @@ import (
 )
 
 func (h *Handler) initPingRoutes() {
-	ping := h.app.Group("ping")
+	ping := h.app.Group("/ping")
 	{
 		ping.Get("/container/:id", h.GetPingsForContainer)
 		ping.Post("/", h.StorePings)
