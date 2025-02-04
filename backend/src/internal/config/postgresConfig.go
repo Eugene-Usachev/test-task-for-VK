@@ -60,22 +60,22 @@ func MustNewPostgresConfig() PostgresConfig {
 	return config
 }
 
-func (config PostgresConfig) User() string {
+func (config *PostgresConfig) User() string {
 	return config.user
 }
 
-func (config PostgresConfig) Password() string {
+func (config *PostgresConfig) Password() string {
 	return config.password
 }
 
-func (config PostgresConfig) Host() string {
+func (config *PostgresConfig) Host() string {
 	return config.host
 }
 
-func (config PostgresConfig) Port() string {
+func (config *PostgresConfig) Port() string {
 	return config.port
 }
 
-func (config PostgresConfig) Database() string {
+func (config *PostgresConfig) Database() string {
 	return config.database
 }

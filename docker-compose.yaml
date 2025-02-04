@@ -1,0 +1,68 @@
+services:
+  postgres:
+    build:
+      dockerfile: ./db/Dockerfile_postgres
+    restart: always
+    networks:
+      - common
+    environment:
+      POSTGRES_DB: container_monitoring
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+
+  migrate:
+    image: migrate/migrate
+    restart: on-failure
+    networks:
+      - common
+    depends_on:
+      - postgres
+    volumes:
+      - ./db/migrations:/migrations
+    command: [ "-path", "/migrations", "-database", "postgres://admin:password@postgres:5432/container_monitoring?sslmode=disable", "up" ]
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: final
+    ports:
+      - "4040:4040"
+    networks:
+      - common
+    environment:
+      - ADDR=backend:4040
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DATABASE=container_monitoring
+
+    depends_on:
+      postgres:
+        condition: service_started
+
+  pinger:
+    build:
+      context: ./pinger
+      dockerfile: Dockerfile
+      target: final
+    networks:
+      - common
+    environment:
+      - BACKEND_ADDR=backend:4040
+      - TIMEOUT_MS=3000
+      - TRIES=3
+      - INTERVAL_MS=5000
+
+    depends_on:
+      postgres:
+        condition: service_started
+      backend:
+        condition: service_started
+
+networks:
+  common:
+    driver: bridge

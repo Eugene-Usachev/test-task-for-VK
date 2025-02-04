@@ -1,10 +1,11 @@
 package main
 
 import (
+	"log"
+
 	"github.com/Eugene-Usachev/test-task-for-VK/backend/src/internal/config"
 	"github.com/Eugene-Usachev/test-task-for-VK/backend/src/internal/handler"
 	servicepkg "github.com/Eugene-Usachev/test-task-for-VK/backend/src/internal/service"
-	"github.com/gofiber/fiber/v3/log"
 )
 
 func main() {

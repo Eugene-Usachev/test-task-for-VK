@@ -1,0 +1,5 @@
+# It is better to use docker-compose `image: postgres:latest`, but task description requires it.
+
+FROM postgres:latest
+
+EXPOSE 5432

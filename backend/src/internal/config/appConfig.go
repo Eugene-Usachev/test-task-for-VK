@@ -28,6 +28,6 @@ func MustNewAppConfig() AppConfig {
 	return config
 }
 
-func (config AppConfig) Addr() string {
+func (config *AppConfig) Addr() string {
 	return config.addr
 }

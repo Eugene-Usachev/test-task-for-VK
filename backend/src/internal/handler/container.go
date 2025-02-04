@@ -9,7 +9,7 @@ import (
 )
 
 func (h *Handler) initContainerRoutes() {
-	container := h.app.Group("container")
+	container := h.app.Group("/container")
 	{
 		container.Get("/id_and_ip_address_only", h.GetContainerIDsAndIPAddressesOnly)
 		container.Get("/with_latest_ping", h.GetContainersWithLatestPing)
