@@ -16,7 +16,10 @@ function RowDataFromContainer(container: Container): RowData {
 		const secondsInMs = container.lastPing!.date.seconds * 1000;
 		const nanosInMs = container.lastPing!.date.nanos * 1e-6;
 		const date = new Date(secondsInMs + nanosInMs);
-		const dateString = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()} ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
+		const dateHours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+		const dateMinutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+		const dateSeconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+		const dateString = `${dateHours}:${dateMinutes}:${dateSeconds} ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
 
 		const micros = container.lastPing!.pingTimeInMicroseconds;
 		const time = micros > 1e5 ? (micros / 1e3) + "ms" : micros + "μs";
@@ -41,14 +44,14 @@ async function getRows(): Promise<RowData[] | null> {
 	let res = await getContainers();
 
 	if (res.status === 200) {
-		const { successful_containers, invalid_containers } = res.data;
+		const { successfulContainers, invalidContainers } = res.data;
 		let containers: Container[] = [];
 
-		for (const container of successful_containers) {
+		for (const container of successfulContainers) {
 			containers.push(ParseContainerFromBackend(container));
 		}
 
-		for (const container of invalid_containers) {
+		for (const container of invalidContainers) {
 			containers.push(ParseContainerFromBackend(container));
 		}
 

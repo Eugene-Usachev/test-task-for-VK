@@ -3,12 +3,12 @@ package repository
 import (
 	"context"
 	"errors"
-	"google.golang.org/protobuf/types/known/timestamppb"
 	"time"
 
 	"github.com/Eugene-Usachev/test-task-for-VK/backend/src/pkg/model"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type PingRepository struct {

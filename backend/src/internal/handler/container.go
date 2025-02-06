@@ -35,8 +35,8 @@ func (h *Handler) GetContainersWithLatestPing(ctx fiber.Ctx) error {
 	}
 
 	return ctx.Status(fiber.StatusOK).JSON(struct {
-		SuccessfulContainers []model.GetContainerWithLatestPing `json:"successful_containers"`
-		InvalidContainers    []model.GetContainer               `json:"invalid_containers"`
+		SuccessfulContainers []model.GetContainerWithLatestPing `json:"successfulContainers"`
+		InvalidContainers    []model.GetContainer               `json:"invalidContainers"`
 	}{
 		SuccessfulContainers: successfulContainers,
 		InvalidContainers:    invalidContainers,
