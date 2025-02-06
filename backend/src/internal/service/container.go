@@ -19,20 +19,20 @@ func NewContainerService(repository repository.Container) *ContainerService {
 	}
 }
 
-func (c ContainerService) RegisterContainer(ctx context.Context, container *model.RegisterContainer) error {
+func (c *ContainerService) RegisterContainer(ctx context.Context, container *model.RegisterContainer) error {
 	return c.repository.RegisterContainer(ctx, container)
 }
 
-func (c ContainerService) GetContainers(ctx context.Context) ([]model.GetContainer, error) {
+func (c *ContainerService) GetContainers(ctx context.Context) ([]model.GetContainer, error) {
 	return c.repository.GetContainers(ctx)
 }
 
-func (c ContainerService) GetContainersWithLatestPing(
+func (c *ContainerService) GetContainersWithLatestPing(
 	ctx context.Context,
-) ([]model.GetContainerWithLatestPing, error) {
+) (successfulContainers []model.GetContainerWithLatestPing, invalidContainers []model.GetContainer, err error) {
 	return c.repository.GetContainersWithLatestPing(ctx)
 }
 
-func (c ContainerService) UnregisterContainer(ctx context.Context, containerID int) error {
+func (c *ContainerService) UnregisterContainer(ctx context.Context, containerID int) error {
 	return c.repository.UnregisterContainer(ctx, containerID)
 }

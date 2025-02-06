@@ -3,6 +3,8 @@ package repository
 import (
 	"context"
 	"errors"
+	"google.golang.org/protobuf/types/known/timestamppb"
+	"time"
 
 	"github.com/Eugene-Usachev/test-task-for-VK/backend/src/pkg/model"
 	"github.com/jackc/pgx/v5"
@@ -33,7 +35,7 @@ func (p *PingRepository) StorePings(ctx context.Context, pings []model.Ping) err
 			pings[i].GetContainerId(),
 			pings[i].GetPingTime(),
 			pings[i].GetWasSuccessful(),
-			pings[i].GetDate(),
+			pings[i].GetDate().AsTime(),
 		)
 		if err != nil {
 			return err
@@ -66,14 +68,21 @@ func (p *PingRepository) GetPingsForContainer(
 		return nil, err
 	}
 
-	pings := make([]model.Ping, limit)
-	i := 0
+	var (
+		pings = make([]model.Ping, limit)
+		i     = 0
+		date  time.Time
+	)
 
 	for rows.Next() {
-		err = rows.Scan(&pings[i].ContainerId, &pings[i].PingTime, &pings[i].WasSuccessful, &pings[i].Date)
+		err = rows.Scan(&pings[i].ContainerId, &pings[i].PingTime, &pings[i].WasSuccessful, &date)
 		if err != nil {
 			return nil, err
 		}
+
+		pings[i].Date = timestamppb.New(date)
+
+		i++
 	}
 
 	return pings, nil

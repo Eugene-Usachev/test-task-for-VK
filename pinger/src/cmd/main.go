@@ -42,6 +42,10 @@ func main() {
 	pinger := pingerpkg.NewGoPinger(cfg.GetTimeout(), cfg.GetTries())
 	client := clientpkg.NewHTTPClient(cfg.BackendAddr())
 
+	if err := client.RegisterContainers(context.Background(), cfg.GetContainerAddrs()); err != nil {
+		log.Fatalf("Failed to register containers: %v", err)
+	}
+
 	for {
 		tryPing(pinger, client)
 

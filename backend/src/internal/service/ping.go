@@ -19,11 +19,11 @@ func NewPingService(repository repository.Ping) *PingService {
 	}
 }
 
-func (p PingService) StorePings(ctx context.Context, pings []model.Ping) error {
+func (p *PingService) StorePings(ctx context.Context, pings []model.Ping) error {
 	return p.repository.StorePings(ctx, pings)
 }
 
-func (p PingService) GetPingsForContainer(
+func (p *PingService) GetPingsForContainer(
 	ctx context.Context,
 	containerID int,
 	offset int,

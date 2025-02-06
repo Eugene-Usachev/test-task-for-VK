@@ -16,9 +16,25 @@ func NewHTTPHandler(service *servicepkg.Service) *Handler {
 		service: service,
 	}
 
+	handler.initCORSMiddleware()
 	handler.initRoutes()
 
 	return handler
+}
+
+func (h *Handler) initCORSMiddleware() {
+	h.app.Use(func(c fiber.Ctx) error {
+		c.Set("Access-Control-Allow-Origin", "*")
+		c.Set("Access-Control-Allow-Credentials", "true")
+		c.Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+		c.Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
+
+		if c.Method() == "OPTIONS" {
+			return c.SendStatus(fiber.StatusOK)
+		}
+
+		return c.Next()
+	})
 }
 
 func (h *Handler) initRoutes() {

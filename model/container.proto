@@ -19,6 +19,5 @@ message GetContainerWithLatestPing {
   int64  id                      = 1;
   string ip_address              = 2;
   int64  ping_time               = 3;
-  google.protobuf.Timestamp date = 4; // size 12, but Ping is aligned by 8, so was_successful is described next
-  bool   was_successful          = 5;
+  google.protobuf.Timestamp date = 4;
 }

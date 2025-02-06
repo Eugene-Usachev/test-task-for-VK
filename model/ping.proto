@@ -8,7 +8,8 @@ option go_package = "backend/src/pkg/model;model";
 
 message Ping {
   int64                     container_id    = 1;
+  // Ping duration in microseconds
   int64                     ping_time       = 2;
-  google.protobuf.Timestamp date            = 3; // size 12, but Ping is aligned by 8, so was_successful is described next
+  google.protobuf.Timestamp date            = 3;
   bool                      was_successful  = 4;
 }
