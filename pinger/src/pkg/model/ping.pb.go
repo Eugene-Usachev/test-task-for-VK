@@ -26,7 +26,8 @@ type Ping struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	ContainerId   int64                  `protobuf:"varint,1,opt,name=container_id,json=containerId,proto3" json:"container_id,omitempty"`
+	ContainerId int64 `protobuf:"varint,1,opt,name=container_id,json=containerId,proto3" json:"container_id,omitempty"`
+	// Ping duration in microseconds
 	PingTime      int64                  `protobuf:"varint,2,opt,name=ping_time,json=pingTime,proto3" json:"ping_time,omitempty"`
 	Date          *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=date,proto3" json:"date,omitempty"` // size 12, but Ping is aligned by 8, so was_successful is described next
 	WasSuccessful bool                   `protobuf:"varint,4,opt,name=was_successful,json=wasSuccessful,proto3" json:"was_successful,omitempty"`

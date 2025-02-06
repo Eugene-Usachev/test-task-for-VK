@@ -1,0 +1,19 @@
+.main {
+  display: grid;
+  margin-top: 5rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.header:first-child {
+  font-size: 2rem;
+}

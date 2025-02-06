@@ -10,7 +10,9 @@ import (
 type Container interface {
 	RegisterContainer(ctx context.Context, container *model.RegisterContainer) error
 	GetContainers(ctx context.Context) ([]model.GetContainer, error)
-	GetContainersWithLatestPing(ctx context.Context) ([]model.GetContainerWithLatestPing, error)
+	GetContainersWithLatestPing(
+		ctx context.Context,
+	) (successfulContainers []model.GetContainerWithLatestPing, invalidContainers []model.GetContainer, err error)
 	UnregisterContainer(ctx context.Context, containerID int) error
 }
 

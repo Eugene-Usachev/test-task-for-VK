@@ -76,6 +76,66 @@ func (c *HTTPClient) GetContainers(ctx context.Context) ([]model.GetContainer, e
 	return containers, err
 }
 
+func (c *HTTPClient) RegisterContainers(ctx context.Context, addrs []string) error {
+	url := "http://" + c.addr + "/container/many"
+
+	var (
+		req     *http.Request
+		reqBody []byte
+		resp    *http.Response
+	)
+
+	containers := make([]model.RegisterContainer, len(addrs))
+	for i, addr := range addrs {
+		containers[i] = model.RegisterContainer{
+			IpAddress: addr,
+		}
+	}
+
+	bodyBytes, err := json.Marshal(containers)
+	if err != nil {
+		return err
+	}
+
+	body := bytes.NewBuffer(bodyBytes)
+
+	req, err = http.NewRequestWithContext(ctx, http.MethodPost, url, body)
+	if err != nil {
+		return err
+	}
+
+	err = pkg.DoWithTries(func() error {
+		// reason = false positive
+		//nolint:bodyclose
+		resp, err = c.client.Do(req)
+
+		defer func(Body io.ReadCloser) {
+			err = Body.Close()
+			if err != nil {
+				log.Println("Failed to close HTTP client body: ", err)
+			}
+		}(resp.Body)
+
+		if err != nil {
+			return err
+		}
+
+		if resp.StatusCode != http.StatusOK {
+			reqBody, _ = io.ReadAll(resp.Body)
+
+			if resp.StatusCode == http.StatusBadRequest {
+				return fmt.Errorf("%w: %s", ErrBadRequest, string(reqBody))
+			}
+
+			return fmt.Errorf("%w: %s", ErrServerInternalError, string(reqBody))
+		}
+
+		return nil
+	}, 5, 100*time.Millisecond)
+
+	return err
+}
+
 func (c *HTTPClient) StorePings(ctx context.Context, pings []model.Ping) error {
 	url := "http://" + c.addr + "/ping/"
 

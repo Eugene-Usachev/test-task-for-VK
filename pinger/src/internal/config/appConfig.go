@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/goccy/go-json"
 	"log"
 	"os"
 	"strconv"
@@ -8,10 +9,11 @@ import (
 )
 
 type AppConfig struct {
-	backendAddr string
-	timeout     time.Duration
-	tries       int
-	interval    time.Duration
+	backendAddr    string
+	timeout        time.Duration
+	tries          int
+	interval       time.Duration
+	containerAddrs []string
 }
 
 func MustNewAppConfig() AppConfig {
@@ -71,6 +73,17 @@ func MustNewAppConfig() AppConfig {
 		}
 	}
 
+	containerAddrs := os.Getenv("CONTAINER_ADDRS")
+	if containerAddrs == "" {
+		isValid = false
+	} else {
+		if err = json.Unmarshal([]byte(containerAddrs), &config.containerAddrs); err != nil {
+			isValid = false
+
+			log.Printf("Failed to parse CONTAINER_ADDRS: %v", err)
+		}
+	}
+
 	if !isValid {
 		log.Fatal("Invalid config, read logs above")
 	}
@@ -92,4 +105,8 @@ func (config *AppConfig) GetTries() int {
 
 func (config *AppConfig) GetInterval() time.Duration {
 	return config.interval
+}
+
+func (config *AppConfig) GetContainerAddrs() []string {
+	return config.containerAddrs
 }

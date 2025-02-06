@@ -36,7 +36,7 @@ func (p *GoPinger) PingEachContainer(containers []model.GetContainer) []model.Pi
 	p.tail.Store(0)
 
 	if len(p.slice) < len(containers) {
-		p.slice = append(p.slice, make([]model.Ping, len(containers)-len(p.slice))...)
+		p.slice = make([]model.Ping, len(containers))
 	}
 
 	for i := range containers {
@@ -77,11 +77,11 @@ func (p *GoPinger) ping(container *model.GetContainer) {
 		return
 	}
 
-	p.writeResult(container.GetId(), pinger.Statistics().AvgRtt.Milliseconds(), true)
+	p.writeResult(container.GetId(), pinger.Statistics().AvgRtt.Microseconds(), true)
 }
 
 func (p *GoPinger) writeResult(containerID int64, pingTime int64, wasSuccessful bool) {
-	slot := p.tail.Add(1)
+	slot := p.tail.Add(1) - 1
 	p.slice[slot] = model.Ping{
 		ContainerId:   containerID,
 		PingTime:      pingTime,
