@@ -1,13 +1,13 @@
 import axios, {AxiosResponse} from 'axios';
 import {InvalidContainerFromBackend, SuccessContainerFromBackend} from "@/models/container";
 
-const API_URL = 'http://localhost:4040';
+const API_URL = '/api';
 
 interface GetContainerWithLatestPingResponse {
 	/** These containers have latest successful ping */
-	successful_containers: SuccessContainerFromBackend[];
+	successfulContainers: SuccessContainerFromBackend[];
 	/** These containers __don't__ have latest successful ping */
-	invalid_containers: InvalidContainerFromBackend[];
+	invalidContainers: InvalidContainerFromBackend[];
 }
 
 export const getContainers = async (): Promise<AxiosResponse<GetContainerWithLatestPingResponse>> => {

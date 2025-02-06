@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+
 	"github.com/Eugene-Usachev/test-task-for-VK/backend/src/pkg/model"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -107,7 +108,13 @@ func (c *ContainerRepository) GetContainersWithLatestPing(
 
 			successSliceIndex++
 		} else {
-			invalidContainers = append(invalidContainers, model.GetContainer{Id: containers[successSliceIndex].Id, IpAddress: containers[successSliceIndex].IpAddress})
+			invalidContainers = append(
+				invalidContainers,
+				model.GetContainer{
+					Id:        containers[successSliceIndex].GetId(),
+					IpAddress: containers[successSliceIndex].GetIpAddress(),
+				},
+			)
 		}
 	}
 

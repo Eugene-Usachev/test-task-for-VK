@@ -1,11 +1,12 @@
 package config
 
 import (
-	"github.com/goccy/go-json"
 	"log"
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/goccy/go-json"
 )
 
 type AppConfig struct {

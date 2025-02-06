@@ -23,7 +23,7 @@ services:
       - ./db/migrations:/migrations
     command: [ "-path", "/migrations", "-database", "postgres://admin:password@postgres:5432/container_monitoring?sslmode=disable", "up" ]
 
-  backend:
+  backend1:
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -33,7 +33,49 @@ services:
     networks:
       - common
     environment:
-      - ADDR=backend:4040
+      - ADDR=backend1:4040
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DATABASE=container_monitoring
+
+    depends_on:
+      postgres:
+        condition: service_started
+
+  backend2:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: final
+    ports:
+      - "4041:4041"
+    networks:
+      - common
+    environment:
+      - ADDR=backend2:4041
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DATABASE=container_monitoring
+
+    depends_on:
+      postgres:
+        condition: service_started
+
+  backend3:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: final
+    ports:
+      - "4042:4042"
+    networks:
+      - common
+    environment:
+      - ADDR=backend3:4042
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=password
       - POSTGRES_HOST=postgres
@@ -51,17 +93,22 @@ services:
       target: final
     networks:
       - common
+    restart: always
     environment:
-      - BACKEND_ADDR=backend:4040
+      - BACKEND_ADDR=nginx:80/api
       - TIMEOUT_MS=3000
       - TRIES=3
       - INTERVAL_MS=5000
-      - CONTAINER_ADDRS=["backend", "postgres", "migrate", "frontend"]
+      - CONTAINER_ADDRS=["backend1", "backend2", "backend3", "nginx", "postgres", "migrate", "frontend"]
 
     depends_on:
       postgres:
         condition: service_started
-      backend:
+      backend1:
+        condition: service_started
+      backend2:
+        condition: service_started
+      backend3:
         condition: service_started
 
   frontend:
@@ -77,8 +124,26 @@ services:
       - common
 
     depends_on:
-      backend:
+      backend1:
         condition: service_started
+      backend2:
+        condition: service_started
+      backend3:
+        condition: service_started
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+    networks:
+      - common
+    depends_on:
+      - frontend
+      - backend1
+      - backend2
+      - backend3
 
 networks:
   common:
