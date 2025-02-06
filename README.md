@@ -1,5 +1,4 @@
-# test-task-for-VK
-Test task for VK.
+# Test task for VK.
 
 <details>
     <summary>Task description (in Russian)</summary>
@@ -30,6 +29,42 @@ Test task for VK.
     
 ![images/api_schema.png](images/api_schema.png)
 </details>
+
+# Running the application
+
+1. Call `make` to generate `.go` files from `.proto` files;
+2. Run `go mod tidy` in `backend` and `pinger` directories to generate `go.sum` files and install dependencies (for dev);
+3. Run `docker-compose up`.
+
+It is fine if `pinger` or `nginx` containers are restarted and 
+if `pinger` can't ping `migrate` container.
+
+Next you can see results at http://localhost (if you don't have conflicts). Every 30 seconds the page is updated,
+and you can see the table of ping's results.
+
+# On conflicts
+
+Change Nginx port in `docker-compose.yaml` and `nginx.conf`. 
+
+# About done work
+
+All main tasks are done:
+
+1. Backend service is ready;
+2. Frontend service is ready with using React + TypeScript + Next.js;
+3. Database is ready with its migrations;
+4. Pinger service is ready.
+
+# Additional complexity
+
+Of the additional complexity, the task of adding Nginx
+(for Reverse-Proxy, Caching and Load-Balance) has been implemented.
+
+# Configuration
+
+You can configure it in `docker-compose.yaml` file (for example, add more containers to ping list).
+
+# For development
 
 It uses `golang-migrate`. When you run `docker-compose up`, it will create the database and run migrations.
 After it, you can call
