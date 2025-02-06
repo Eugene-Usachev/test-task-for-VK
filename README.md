@@ -35,3 +35,5 @@ It uses `golang-migrate`. When you run `docker-compose up`, it will create the d
 After it, you can call
 `docker exec -i <container name> pg_dump -U admin -d container_monitoring --schema-only > ./db/schema.sql`
 to get the schema.
+
+All DTOs are described in `pkg/model` in `.proto` files. To generate `.go` files run `make`.

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package model;
+
+option go_package = "backend/src/pkg/model;model";
+
+message Ping {
+  int64                     container_id    = 1;
+  // Ping duration in microseconds
+  int64                     ping_time       = 2;
+  google.protobuf.Timestamp date            = 3;
+  bool                      was_successful  = 4;
+}
